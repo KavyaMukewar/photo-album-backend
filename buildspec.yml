@@ -7,8 +7,9 @@ phases:
     commands:
       - cd index-photos && zip -r ../index-photos.zip . && cd ..
       - cd search-photos && zip -r ../search-photos.zip . && cd ..
-      - aws lambda update-function-code --function-name index-photos --zip-file fileb://index-photos.zip
-      - aws lambda update-function-code --function-name search-photos --zip-file fileb://search-photos.zip
+      # --query keeps the output to name + timestamp (env vars hold secrets)
+      - aws lambda update-function-code --function-name index-photos --zip-file fileb://index-photos.zip --query '[FunctionName,LastModified]' --output text
+      - aws lambda update-function-code --function-name search-photos --zip-file fileb://search-photos.zip --query '[FunctionName,LastModified]' --output text
 
 artifacts:
   files:
