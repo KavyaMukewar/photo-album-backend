@@ -1,0 +1,16 @@
+version: 0.2
+
+# P1: CodePipeline -> CodeBuild. Zips each Lambda folder and pushes it to the
+# existing functions. The CodeBuild service role needs lambda:UpdateFunctionCode.
+phases:
+  build:
+    commands:
+      - cd index-photos && zip -r ../index-photos.zip . && cd ..
+      - cd search-photos && zip -r ../search-photos.zip . && cd ..
+      - aws lambda update-function-code --function-name index-photos --zip-file fileb://index-photos.zip
+      - aws lambda update-function-code --function-name search-photos --zip-file fileb://search-photos.zip
+
+artifacts:
+  files:
+    - index-photos.zip
+    - search-photos.zip
